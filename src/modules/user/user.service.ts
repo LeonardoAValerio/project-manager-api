@@ -4,6 +4,7 @@ import { User } from "@prisma/client";
 import { hash } from "node:crypto";
 import { HashService } from "src/shared/utils/hash.service";
 import { GetUserDto } from "./dto/get-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 
 @Injectable()
 export class UserService {
@@ -12,7 +13,7 @@ export class UserService {
         private readonly hashService: HashService
     ) {}
 
-    async create(attributes: User): Promise<GetUserDto> {
+    async create(attributes: CreateUserDto): Promise<GetUserDto> {
         attributes.password = this.hashService.createHash(attributes.password);
 
         const newUser = await this.userRepositorie.create(attributes);
@@ -22,6 +23,6 @@ export class UserService {
     async getAll(): Promise<GetUserDto[]> {
         const users = await this.userRepositorie.getAll();
 
-        return users;
+        return users
     }
 }
