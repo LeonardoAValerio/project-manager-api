@@ -12,3 +12,40 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id String @id @default(uuid())
+  name String
+  email String
+  password String
+  Colaborator ColaboratorProject[]
+}
+
+model Project {
+  id String @id @default(uuid())
+  name String
+  description String?
+  Project ColaboratorProject[]
+}
+
+model ColaboratorProject {
+  id_colaborator String @default(uuid()) @unique
+  id_user String
+  id_project String
+  role String
+  hour_value Float
+
+  User User @relation(fields: [id_user], references: [id], onDelete: Cascade)
+  Project Project @relation(fields: [id_project], references: [id], onDelete: Cascade)
+  ActionsProject ActionProject[]
+
+  @@id([id_user, id_project])
+}
+
+model ActionProject {
+  id_colaborator String @id
+  action String
+  date DateTime
+
+  ColaboratorProject ColaboratorProject @relation(fields: [id_colaborator], references: [id_colaborator])
+}
