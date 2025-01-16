@@ -15,8 +15,7 @@ export class HashService {
 
     verifyHash(current: string, behavior: string) {
         const currentHash = hash(this.secret, current);
-        const behaviorHash = hash(this.secret, behavior);
 
-        return currentHash === behaviorHash;
+        return currentHash === behavior;
     }
 }
