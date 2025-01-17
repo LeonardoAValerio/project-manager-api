@@ -1,7 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { UserRepositorie } from "./user.repositorie";
-import { User } from "@prisma/client";
-import { hash } from "node:crypto";
 import { HashService } from "src/shared/utils/hash.service";
 import { GetUserDto } from "./dto/get-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";

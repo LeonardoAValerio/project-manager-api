@@ -1,0 +1,21 @@
+import { Injectable } from "@nestjs/common";
+import { CreateProjectDto } from "./dto/create-project.dto";
+import { GetProjectDto } from "./dto/get-project.dto";
+import { ProjectRepositorie } from "./project.repositorie";
+
+@Injectable()
+export class ProjectService {
+    constructor(
+        private readonly projectRepositorie: ProjectRepositorie,
+    ) {}
+
+    async create(attributes: CreateProjectDto): Promise<GetProjectDto> {
+        const newProject = await this.projectRepositorie.create(attributes);
+        return newProject;
+    }
+
+    async getAll(): Promise<GetProjectDto[]> {
+        const projects = await this.projectRepositorie.getAll();
+        return projects;
+    }
+}
