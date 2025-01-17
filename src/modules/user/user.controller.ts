@@ -23,7 +23,7 @@ export class UserController {
 
     @ApiCreatedResponse({
         description: 'The record has been successfully created.',
-        type: CreateUserDto,
+        type: GetUserDto,
     })
     @ApiBadRequestResponse({
         description: 'Validation error',
