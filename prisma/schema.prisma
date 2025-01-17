@@ -37,15 +37,15 @@ model ColaboratorProject {
 
   User User @relation(fields: [id_user], references: [id], onDelete: Cascade)
   Project Project @relation(fields: [id_project], references: [id], onDelete: Cascade)
-  ActionsProject ActionProject[]
+  ActionsProject Work[]
 
   @@id([id_user, id_project])
 }
 
-model ActionProject {
-  id_colaborator String @id
-  action String
-  date DateTime
-
+model Work {
+  id String @id @default(uuid())
+  id_colaborator String
+  started_at DateTime @default(now())
+  ended_at DateTime?
   ColaboratorProject ColaboratorProject @relation(fields: [id_colaborator], references: [id_colaborator])
 }
