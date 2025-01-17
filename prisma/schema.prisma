@@ -47,5 +47,6 @@ model Work {
   id_colaborator String
   started_at DateTime @default(now())
   ended_at DateTime?
+  total_hours_worked Float? 
   ColaboratorProject ColaboratorProject @relation(fields: [id_colaborator], references: [id_colaborator])
 }
