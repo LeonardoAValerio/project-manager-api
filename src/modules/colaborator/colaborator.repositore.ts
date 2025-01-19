@@ -9,7 +9,6 @@ export class ColaboratorRepositorie {
         private readonly prisma: PrismaService
     ) {}
 
-    //TODO: Migrate schema. Use ColaboratorRoles
     async create(attributes: CreateColaboratorDto): Promise<GetColaboratorDto> {
         const newColaborator = await this.prisma.colaboratorProject.create({
             data: attributes,

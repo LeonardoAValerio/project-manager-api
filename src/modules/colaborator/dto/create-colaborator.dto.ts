@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { ColaboratorRoles } from "@prisma/client";
 import { IsEnum, IsNumber, IsUUID } from "class-validator";
-import { Roles } from "src/shared/utils/types/roles.type";
 
 export class CreateColaboratorDto {
     @ApiProperty()
@@ -12,8 +12,8 @@ export class CreateColaboratorDto {
     id_user: string;
 
     @ApiProperty()
-    @IsEnum(Roles)
-    role: Roles;
+    @IsEnum(ColaboratorRoles)
+    role: ColaboratorRoles;
 
     @ApiProperty()
     @IsNumber()
