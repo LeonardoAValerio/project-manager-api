@@ -11,7 +11,7 @@ export class CreateColaboratorDto {
     @IsUUID()
     id_user: string;
 
-    @ApiProperty()
+    @ApiProperty({enum: Object.values(ColaboratorRoles)})
     @IsEnum(ColaboratorRoles)
     role: ColaboratorRoles;
 
