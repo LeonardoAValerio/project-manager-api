@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { UserRepositorie } from "./user.repositorie";
 import { HashService } from "src/shared/utils/hash.service";
 import { GetUserDto } from "./dto/get-user.dto";
@@ -22,5 +22,10 @@ export class UserService {
         const users = await this.userRepositorie.getAll();
 
         return users
+    }
+
+    async deleteById(id: string | undefined) {
+        if(!id) throw new BadRequestException("id user doesn't sended!");
+        await this.userRepositorie.deleteById(id);
     }
 }
