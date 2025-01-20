@@ -12,6 +12,10 @@ export class UserService {
     ) {}
 
     async create(attributes: CreateUserDto): Promise<GetUserDto> {
+        if((await this.userRepositorie.getAll()).some(user => user.email === attributes.email)) {
+            throw new BadRequestException("Email user alredy exists!");
+        }
+
         attributes.password = await this.hashService.createHash(attributes.password);
 
         const newUser = await this.userRepositorie.create(attributes);

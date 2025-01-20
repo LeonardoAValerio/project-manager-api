@@ -29,6 +29,9 @@ export class UserController {
         description: 'Validation error',
         type: ValidationErrorResponse
     })
+    @ApiBadRequestResponse({
+        description: "Email user alredy exists!",
+    })
     @Post()
     async post(@Body() body: CreateUserDto) {
         const newUser = await this.userService.create(body);
