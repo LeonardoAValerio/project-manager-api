@@ -4,6 +4,8 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiParam } from "@nestjs/swagger";
 import { ValidationErrorResponse } from "src/shared/utils/responses/validation-error.response";
 import { GetUserDto } from "./dto/get-user.dto";
+import { LoginUserDto } from "./dto/login-user.dto";
+import { Token } from "src/shared/utils/interfaces/token.interface";
 
 @Controller("user")
 export class UserController {
@@ -48,5 +50,18 @@ export class UserController {
     @Delete(":id_user")
     async delete(@Param("id_user") id: string) {
         await this.userService.deleteById(id);
+    }
+
+    @ApiCreatedResponse({
+        description: "You are logged successfully!",
+        type: Token
+    })
+    @ApiBadRequestResponse({
+        description: "Invalid email or password!",
+    })
+    @Post("login")
+    async login(@Body() body: LoginUserDto) {
+        const token = await this.userService.validateLogin(body);
+        return token;
     }
 }

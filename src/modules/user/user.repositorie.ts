@@ -36,4 +36,12 @@ export class UserRepositorie {
            } 
         })
     }
+
+    async getFiltered(filters: Partial<User>): Promise<User[]> {
+        const users = await this.prisma.user.findMany({
+            where: filters
+        })
+
+        return users;
+    }
 }

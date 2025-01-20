@@ -4,6 +4,7 @@ import { UserRepositorie } from "./user.repositorie";
 import { UserService } from "./user.service";
 import { PrismaService } from "src/shared/database/prisma.service";
 import { HashService } from "src/shared/utils/hash.service";
+import { JwtService } from "src/shared/utils/jwt.service";
 
 @Module({
     controllers: [UserController],
@@ -11,7 +12,8 @@ import { HashService } from "src/shared/utils/hash.service";
         UserService, 
         UserRepositorie,
         PrismaService,
-        HashService
+        HashService,
+        JwtService
     ]
 })
 export class UserModule {}
