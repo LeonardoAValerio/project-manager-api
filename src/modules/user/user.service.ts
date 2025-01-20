@@ -30,6 +30,10 @@ export class UserService {
 
     async deleteById(id: string | undefined) {
         if(!id) throw new BadRequestException("id user doesn't sended!");
-        await this.userRepositorie.deleteById(id);
+        try {
+            await this.userRepositorie.deleteById(id);
+        } catch(error) {
+            throw new BadRequestException("Not found user!")
+        }
     }
 }
