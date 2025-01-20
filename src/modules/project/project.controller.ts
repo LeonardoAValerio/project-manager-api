@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
+import { BadRequestException, Body, Controller, Get, Headers, Post } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiHeader, ApiOkResponse } from "@nestjs/swagger";
 import { ValidationErrorResponse } from "src/shared/utils/responses/validation-error.response";
 import { ProjectService } from "./project.service";
 import { GetProjectDto } from "./dto/get-project.dto";
@@ -29,10 +29,16 @@ export class ProjectController {
         description: 'Validation error',
         type: ValidationErrorResponse
     })
+    @ApiHeader({
+        name: "id_user",
+        description: "This id of user to create as a master of the project!",
+        required: true
+    })
     @Post()
-    async post(@Body() body: CreateProjectDto) {
-        const newProject = await this.projectService.create(body);
+    async post(@Body() body: CreateProjectDto, @Headers("id_user") id_user: string) {
+        if(!id_user) throw new BadRequestException("Doesn't sended id_user in headers!");
 
+        const newProject = await this.projectService.createWithMasterUser(body, id_user);
         return newProject;
     }
 }
