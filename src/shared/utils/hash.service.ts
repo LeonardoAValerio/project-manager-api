@@ -1,21 +1,18 @@
-import { Injectable } from "@nestjs/common";
-import { hash } from "node:crypto"
+import { Injectable } from "@nestjs/common"; 
+import { compare, genSalt, hash } from "bcrypt"
+
 
 @Injectable()
 export class HashService {
-    private get secret(): string {
-        return process.env.SECRET_HASH
-    }
 
-    createHash(text: string) {
-        const hashCreated = hash(this.secret, text);
+    async createHash(text: string) {
+        const saltRounds = await genSalt(10);
+        const hashCreated = await hash(text, 10);
 
         return hashCreated;
     }
 
-    verifyHash(current: string, behavior: string) {
-        const currentHash = hash(this.secret, current);
-
-        return currentHash === behavior;
+    async verifyHash(current: string, behavior: string) {
+        return await compare(current, behavior);
     }
 }

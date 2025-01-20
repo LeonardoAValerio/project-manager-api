@@ -12,7 +12,7 @@ export class UserService {
     ) {}
 
     async create(attributes: CreateUserDto): Promise<GetUserDto> {
-        attributes.password = this.hashService.createHash(attributes.password);
+        attributes.password = await this.hashService.createHash(attributes.password);
 
         const newUser = await this.userRepositorie.create(attributes);
         return newUser;
