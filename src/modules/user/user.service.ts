@@ -4,9 +4,9 @@ import { HashService } from "src/shared/utils/hash.service";
 import { GetUserDto } from "./dto/get-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { LoginUserDto } from "./dto/login-user.dto";
-import { JwtService } from "src/shared/utils/jwt.service";
+import { JwtService } from "src/shared/utils/jwt/jwt.service";
 import { UserPayload } from "./interface/user-payload.interface";
-import { Token } from "src/shared/utils/interfaces/token.interface";
+import { Token } from "src/shared/utils/jwt/token.interface";
 
 @Injectable()
 export class UserService {

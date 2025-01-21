@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { sign, verify } from "jsonwebtoken";
-import { Token } from "./interfaces/token.interface";
+import { Token } from "./token.interface";
 
 @Injectable()
 export class JwtService<Payload> {

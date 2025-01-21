@@ -5,7 +5,7 @@ import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiParam } fr
 import { ValidationErrorResponse } from "src/shared/utils/responses/validation-error.response";
 import { GetUserDto } from "./dto/get-user.dto";
 import { LoginUserDto } from "./dto/login-user.dto";
-import { Token } from "src/shared/utils/interfaces/token.interface";
+import { Token } from "src/shared/utils/jwt/token.interface";
 
 @Controller("user")
 export class UserController {

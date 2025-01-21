@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('Manager Project - Documentation')
     .setDescription('The documentation about a project to do a management projects!')
     .setVersion('1.0')
+    .addBasicAuth( {type: 'apiKey', name: "authorization", in: "header"}, "authorization")
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
