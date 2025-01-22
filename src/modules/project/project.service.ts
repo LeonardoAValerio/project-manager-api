@@ -3,6 +3,7 @@ import { CreateProjectDto } from "./dto/create-project.dto";
 import { GetProjectDto } from "./dto/get-project.dto";
 import { ProjectRepositorie } from "./project.repositorie";
 import { ColaboratorService } from "../colaborator/colaborator.service";
+import { Project } from "@prisma/client";
 
 @Injectable()
 export class ProjectService {
@@ -25,6 +26,12 @@ export class ProjectService {
 
     async getAll(): Promise<GetProjectDto[]> {
         const projects = await this.projectRepositorie.getAll();
+        return projects;
+    }
+
+    async getByIdUser(id_user: string): Promise<GetProjectDto[]> {
+        const projects = await this.projectRepositorie.getByIdUser(id_user);
+
         return projects;
     }
 }

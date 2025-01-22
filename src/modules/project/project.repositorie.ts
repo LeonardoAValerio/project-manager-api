@@ -22,4 +22,19 @@ export class ProjectRepositorie {
         
         return projects;
     }
+
+    async getByIdUser(id_user: string) {
+        const projects = await this.prisma.project.findMany({
+            where: {
+                Project: {
+                    some: {
+                        id_user
+                    }
+                }
+            }
+        });
+
+        console.log(projects)
+        return projects;
+    }
 }

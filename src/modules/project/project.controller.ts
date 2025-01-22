@@ -1,15 +1,19 @@
-import { BadRequestException, Body, Controller, Get, Headers, Post, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Headers, Post, Req, UseGuards } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiBasicAuth, ApiCreatedResponse, ApiHeader, ApiOkResponse } from "@nestjs/swagger";
 import { ValidationErrorResponse } from "src/shared/utils/responses/validation-error.response";
 import { ProjectService } from "./project.service";
 import { GetProjectDto } from "./dto/get-project.dto";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { AuthUserGuard } from "src/shared/guards/auth-user.guard";
+import { Request } from "express";
+import { JwtService } from "src/shared/utils/jwt/jwt.service";
+import { UserPayload } from "../user/interface/user-payload.interface";
 
 @Controller("project")
 export class ProjectController {
     constructor(
-        private readonly projectService: ProjectService
+        private readonly projectService: ProjectService,
+        private readonly jwtService: JwtService<UserPayload>
     ) {}
 
     @ApiOkResponse({
@@ -18,8 +22,11 @@ export class ProjectController {
     @ApiBasicAuth("authorization")
     @UseGuards(AuthUserGuard)
     @Get()
-    async getAll() {
-        const projects = await this.projectService.getAll();
+    async getAll(@Req() req: Request) {
+        const token = this.jwtService.decodeToken(req.headers.authorization);
+        const id_user = token.id;
+        if(!id_user) throw new BadRequestException("Doesn't sended id_user in headers!");
+        const projects = await this.projectService.getByIdUser(id_user);
 
         return projects;
     }
@@ -40,7 +47,9 @@ export class ProjectController {
     @ApiBasicAuth("authorization")
     @UseGuards(AuthUserGuard)
     @Post()
-    async post(@Body() body: CreateProjectDto, @Headers("id_user") id_user: string) {
+    async post(@Body() body: CreateProjectDto, @Req() req: Request) {
+        const token = this.jwtService.decodeToken(req.headers.authorization);
+        const id_user = token.id;
         if(!id_user) throw new BadRequestException("Doesn't sended id_user in headers!");
 
         const newProject = await this.projectService.createWithMasterUser(body, id_user);
