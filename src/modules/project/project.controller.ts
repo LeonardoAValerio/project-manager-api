@@ -1,10 +1,11 @@
-import { BadRequestException, Body, Controller, Get, Headers, Post, Req, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiBasicAuth, ApiCreatedResponse, ApiHeader, ApiOkResponse } from "@nestjs/swagger";
+import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
 import { ValidationErrorResponse } from "src/shared/utils/responses/validation-error.response";
 import { ProjectService } from "./project.service";
 import { GetProjectDto } from "./dto/get-project.dto";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { Request } from "express";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller("project")
 export class ProjectController {
@@ -12,18 +13,19 @@ export class ProjectController {
         private readonly projectService: ProjectService,
     ) {}
 
+    @ApiBearerAuth("authorization")
     @ApiOkResponse({
         type: [GetProjectDto]
     })
+    @UseGuards(AuthGuard("jwt"))
     @Get()
     async getAll(@Req() req: Request) {
-        const id_user = "token.id";
-        if(!id_user) throw new BadRequestException("Doesn't sended id_user in headers!");
+        const id_user = req.user.id;
         const projects = await this.projectService.getByIdUser(id_user);
-
         return projects;
     }
 
+    @ApiBearerAuth("authorization")
     @ApiCreatedResponse({
         description: 'The record has been successfully created.',
         type: GetProjectDto,
@@ -32,11 +34,10 @@ export class ProjectController {
         description: 'Validation error',
         type: ValidationErrorResponse
     })
+    @UseGuards(AuthGuard("jwt"))
     @Post()
     async post(@Body() body: CreateProjectDto, @Req() req: Request) {
-        const id_user = "token.id";
-        if(!id_user) throw new BadRequestException("Doesn't sended id_user in headers!");
-
+        const id_user = req.user.id;
         const newProject = await this.projectService.createWithMasterUser(body, id_user);
         return newProject;
     }
