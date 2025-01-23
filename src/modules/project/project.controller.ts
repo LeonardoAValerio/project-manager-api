@@ -4,27 +4,20 @@ import { ValidationErrorResponse } from "src/shared/utils/responses/validation-e
 import { ProjectService } from "./project.service";
 import { GetProjectDto } from "./dto/get-project.dto";
 import { CreateProjectDto } from "./dto/create-project.dto";
-import { AuthUserGuard } from "src/shared/guards/auth-user.guard";
 import { Request } from "express";
-import { JwtService } from "src/shared/utils/jwt/jwt.service";
-import { UserPayload } from "../user/interface/user-payload.interface";
 
 @Controller("project")
 export class ProjectController {
     constructor(
         private readonly projectService: ProjectService,
-        private readonly jwtService: JwtService<UserPayload>
     ) {}
 
     @ApiOkResponse({
         type: [GetProjectDto]
     })
-    @ApiBasicAuth("authorization")
-    @UseGuards(AuthUserGuard)
     @Get()
     async getAll(@Req() req: Request) {
-        const token = this.jwtService.decodeToken(req.headers.authorization);
-        const id_user = token.id;
+        const id_user = "token.id";
         if(!id_user) throw new BadRequestException("Doesn't sended id_user in headers!");
         const projects = await this.projectService.getByIdUser(id_user);
 
@@ -39,17 +32,9 @@ export class ProjectController {
         description: 'Validation error',
         type: ValidationErrorResponse
     })
-    @ApiHeader({
-        name: "id_user",
-        description: "This id of user to create as a master of the project!",
-        required: true
-    })
-    @ApiBasicAuth("authorization")
-    @UseGuards(AuthUserGuard)
     @Post()
     async post(@Body() body: CreateProjectDto, @Req() req: Request) {
-        const token = this.jwtService.decodeToken(req.headers.authorization);
-        const id_user = token.id;
+        const id_user = "token.id";
         if(!id_user) throw new BadRequestException("Doesn't sended id_user in headers!");
 
         const newProject = await this.projectService.createWithMasterUser(body, id_user);
