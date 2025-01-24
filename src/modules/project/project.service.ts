@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { GetProjectDto } from "./dto/get-project.dto";
 import { ProjectRepositorie } from "./project.repositorie";
 import { ColaboratorService } from "../colaborator/colaborator.service";
-import { Project } from "@prisma/client";
+import { GetColaboratorProjectDto } from "./dto/get-colaborators-project.dto";
 
 @Injectable()
 export class ProjectService {
@@ -33,5 +33,15 @@ export class ProjectService {
         const projects = await this.projectRepositorie.getByIdUser(id_user);
 
         return projects;
+    }
+
+    async getColaboratorsProject(id_project: string, id_user: string): Promise<GetColaboratorProjectDto[]> {
+        const colaborators = await this.projectRepositorie.getAllColaborators(id_project);
+
+        if(!colaborators.some(colaborator => colaborator.id_user === id_user)) {
+            throw new ForbiddenException();
+        }
+
+        return colaborators;
     }
 }

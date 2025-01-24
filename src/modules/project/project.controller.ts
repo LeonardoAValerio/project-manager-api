@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
 import { ValidationErrorResponse } from "src/shared/utils/responses/validation-error.response";
 import { ProjectService } from "./project.service";
@@ -40,5 +40,13 @@ export class ProjectController {
         const id_user = req.user.id;
         const newProject = await this.projectService.createWithMasterUser(body, id_user);
         return newProject;
+    }
+
+    @UseGuards(AuthGuard("jwt"))
+    @Get(":id_project/colaborators")
+    async getColaboratorsProject(@Param("id_project") id: string, @Req() req: Request) {
+        const colaborators = await this.projectService.getColaboratorsProject(id, req.user.id);
+
+        return colaborators;
     }
 }

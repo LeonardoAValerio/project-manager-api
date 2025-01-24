@@ -37,4 +37,33 @@ export class ProjectRepositorie {
         console.log(projects)
         return projects;
     }
+
+    async getAllColaborators(id_project: string) {
+        const colaboratorsBD = await this.prisma.project.findUnique({
+            where: {
+                id: id_project
+            },
+            select: {
+                Project: {
+                    select: {
+                        id_user: true,
+                        id_colaborator: true,
+                        role: true,
+                        User: {
+                            select: {
+                                name: true,
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        const colaborators = colaboratorsBD.Project.map(colaborator => {
+            const { User, ...result } = colaborator;
+            const mappedColaborator = { name:User.name, ...result }
+            return mappedColaborator;
+        });
+        return colaborators;
+    }
 }
