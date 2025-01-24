@@ -39,7 +39,7 @@ export class ProjectService {
         const colaborators = await this.projectRepositorie.getAllColaborators(id_project);
 
         if(!colaborators.some(colaborator => colaborator.id_user === id_user)) {
-            throw new ForbiddenException();
+            throw new ForbiddenException("Doesn't have access to the project!");
         }
 
         return colaborators;

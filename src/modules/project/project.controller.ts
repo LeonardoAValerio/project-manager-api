@@ -1,11 +1,12 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse } from "@nestjs/swagger";
 import { ValidationErrorResponse } from "src/shared/utils/responses/validation-error.response";
 import { ProjectService } from "./project.service";
 import { GetProjectDto } from "./dto/get-project.dto";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { Request } from "express";
 import { AuthGuard } from "@nestjs/passport";
+import { GetColaboratorDto } from "../colaborator/dto/get-colaborator.dto";
 
 @Controller("project")
 export class ProjectController {
@@ -42,6 +43,13 @@ export class ProjectController {
         return newProject;
     }
 
+    @ApiBearerAuth("authorization")
+    @ApiOkResponse({
+        type: [GetColaboratorDto]
+    })
+    @ApiForbiddenResponse({
+        description: "Doesn't have access to the project!"
+    })
     @UseGuards(AuthGuard("jwt"))
     @Get(":id_project/colaborators")
     async getColaboratorsProject(@Param("id_project") id: string, @Req() req: Request) {
