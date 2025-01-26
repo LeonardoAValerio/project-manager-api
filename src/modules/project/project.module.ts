@@ -15,6 +15,7 @@ import { ColaboratorRepositorie } from "../colaborator/colaborator.repositore";
         PrismaService,
         ColaboratorService,
         ColaboratorRepositorie
-    ]
+    ],
+    exports: [ProjectService]
 })
 export class ProjectModule {}

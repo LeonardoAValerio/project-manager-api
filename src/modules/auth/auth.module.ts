@@ -8,6 +8,7 @@ import { HashService } from "src/shared/utils/hash.service";
 import { JwtModule } from "@nestjs/jwt";
 import { jwtConstants } from "./constants";
 import { JwtStrategy } from "./jwt.strategy";
+import { ProjectModule } from "../project/project.module";
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { JwtStrategy } from "./jwt.strategy";
             secret: jwtConstants.secret,
             signOptions: { expiresIn: '7d' },
         }),
+        ProjectModule
     ],
     controllers: [AuthController],
     providers: [AuthService, LocalStrategy, HashService, JwtStrategy],

@@ -7,6 +7,7 @@ import { CreateProjectDto } from "./dto/create-project.dto";
 import { Request } from "express";
 import { AuthGuard } from "@nestjs/passport";
 import { GetColaboratorDto } from "../colaborator/dto/get-colaborator.dto";
+import { RolesGuard } from "../auth/roles.guard";
 
 @Controller("project")
 export class ProjectController {
@@ -50,10 +51,10 @@ export class ProjectController {
     @ApiForbiddenResponse({
         description: "Doesn't have access to the project!"
     })
-    @UseGuards(AuthGuard("jwt"))
-    @Get(":id_project/colaborators")
-    async getColaboratorsProject(@Param("id_project") id: string, @Req() req: Request) {
-        const colaborators = await this.projectService.getColaboratorsProject(id, req.user.id);
+    @UseGuards(AuthGuard("jwt"), RolesGuard)
+    @Get(":id/colaborators")
+    async getColaboratorsProject(@Param("id") id: string) {
+        const colaborators = await this.projectService.getColaboratorsProject(id);
 
         return colaborators;
     }

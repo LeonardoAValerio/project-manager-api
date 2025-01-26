@@ -35,13 +35,16 @@ export class ProjectService {
         return projects;
     }
 
-    async getColaboratorsProject(id_project: string, id_user: string): Promise<GetColaboratorProjectDto[]> {
+    async getColaboratorsProject(id_project: string): Promise<GetColaboratorProjectDto[]> {
         const colaborators = await this.projectRepositorie.getAllColaborators(id_project);
 
-        if(!colaborators.some(colaborator => colaborator.id_user === id_user)) {
-            throw new ForbiddenException("Doesn't have access to the project!");
-        }
-
         return colaborators;
+    }
+
+    async verifyUserInProject(id_project: string, id_user: string): Promise<undefined | GetColaboratorProjectDto> {
+        const colaborators = await this.getColaboratorsProject(id_project);
+
+        const colaborator = colaborators.find(colaborator => colaborator.id_user === id_user);
+        return colaborator;
     }
 }
