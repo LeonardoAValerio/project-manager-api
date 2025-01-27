@@ -4,12 +4,14 @@ import { GetProjectDto } from "./dto/get-project.dto";
 import { ProjectRepositorie } from "./project.repositorie";
 import { ColaboratorService } from "../colaborator/colaborator.service";
 import { GetColaboratorProjectDto } from "./dto/get-colaborators-project.dto";
+import { EmailService } from "src/shared/utils/email/email.service";
 
 @Injectable()
 export class ProjectService {
     constructor(
-        private readonly projectRepositorie: ProjectRepositorie,
-        private readonly colaboratorService: ColaboratorService
+        private projectRepositorie: ProjectRepositorie,
+        private colaboratorService: ColaboratorService,
+        private emailService: EmailService 
     ) {}
 
     async createWithMasterUser(attributes: CreateProjectDto, id_user: string): Promise<GetProjectDto> {
@@ -46,5 +48,9 @@ export class ProjectService {
 
         const colaborator = colaborators.find(colaborator => colaborator.id_user === id_user);
         return colaborator;
+    }
+
+    async inviteProjectToUser() {
+        await this.emailService.sendEmail();
     }
 }

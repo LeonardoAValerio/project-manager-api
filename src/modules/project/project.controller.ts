@@ -58,4 +58,9 @@ export class ProjectController {
 
         return colaborators;
     }
+
+    @Post(":id/colaborators/invite")
+    async inviteColaborator(@Param("id") id: string) {
+        await this.projectService.inviteProjectToUser();
+    }
 }

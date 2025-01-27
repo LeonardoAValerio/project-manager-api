@@ -6,6 +6,7 @@ import { Module } from "@nestjs/common";
 import { ColaboratorService } from "../colaborator/colaborator.service";
 import { ColaboratorModule } from "../colaborator/colaborator.module";
 import { ColaboratorRepositorie } from "../colaborator/colaborator.repositore";
+import { EmailService } from "src/shared/utils/email/email.service";
 
 @Module({
     controllers: [ProjectController],
@@ -14,7 +15,8 @@ import { ColaboratorRepositorie } from "../colaborator/colaborator.repositore";
         ProjectService,
         PrismaService,
         ColaboratorService,
-        ColaboratorRepositorie
+        ColaboratorRepositorie,
+        EmailService
     ],
     exports: [ProjectService]
 })

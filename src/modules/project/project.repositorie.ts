@@ -34,7 +34,6 @@ export class ProjectRepositorie {
             }
         });
 
-        console.log(projects)
         return projects;
     }
 
