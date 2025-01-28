@@ -34,7 +34,7 @@ export class EmailService {
                         <div class="content">
                         <p>Olá,</p>
                         <p>Você foi convidado por `+ usernameInvited +` para participar do projeto: ` + nameProject +`</p>
-                        <p><a href="https:/localhost:3333/invite/accept/token?=`+ token +`" class="button">Aceitar Convite</a></p>
+                        <p><a href="localhost:3000/invitation/accept/?token=`+ token +`" class="button">Aceitar Convite</a></p>
                         <p>Estamos ansiosos para trabalhar com você!</p>
                         </div>
                         <div class="footer">© 2025 Nome da Empresa</div>

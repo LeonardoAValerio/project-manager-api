@@ -10,6 +10,7 @@ import { ColaboratorService } from "./colaborator.service";
         ColaboratorRepositorie, 
         ColaboratorService,
         PrismaService
-    ]
+    ],
+    exports: [ColaboratorService]
 })
 export class ColaboratorModule {}
