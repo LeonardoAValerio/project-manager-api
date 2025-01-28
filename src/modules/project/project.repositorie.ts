@@ -17,13 +17,13 @@ export class ProjectRepositorie {
         return newProject;
     }
 
-    async getAll(): Promise<GetProjectDto[]> {
+    async findAll(): Promise<GetProjectDto[]> {
         const projects = await this.prisma.project.findMany();
         
         return projects;
     }
 
-    async getByIdUser(id_user: string) {
+    async findByIdUser(id_user: string) {
         const projects = await this.prisma.project.findMany({
             where: {
                 Project: {
@@ -37,7 +37,7 @@ export class ProjectRepositorie {
         return projects;
     }
 
-    async getAllColaborators(id_project: string) {
+    async findColaborators(id_project: string) {
         const colaboratorsBD = await this.prisma.project.findUnique({
             where: {
                 id: id_project

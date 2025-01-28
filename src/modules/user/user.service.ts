@@ -13,7 +13,7 @@ export class UserService {
     ) {}
 
     async create(attributes: CreateUserDto): Promise<GetUserDto> {
-        if((await this.userRepositorie.getAll()).some(user => user.email === attributes.email)) {
+        if((await this.userRepositorie.findAll()).some(user => user.email === attributes.email)) {
             throw new BadRequestException("Email user alredy exists!");
         }
 
@@ -24,13 +24,13 @@ export class UserService {
     }
 
     async getAll(): Promise<GetUserDto[]> {
-        const users = await this.userRepositorie.getAll();
+        const users = await this.userRepositorie.findAll();
 
         return users
     }
 
     async findByEmail(email: string): Promise<User> {
-        const users = await this.userRepositorie.getFiltered({email});
+        const users = await this.userRepositorie.findWithFilters({email});
         const user = users[0];
 
         return user;

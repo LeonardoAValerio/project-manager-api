@@ -27,18 +27,18 @@ export class ProjectService {
     }
 
     async getAll(): Promise<GetProjectDto[]> {
-        const projects = await this.projectRepositorie.getAll();
+        const projects = await this.projectRepositorie.findAll();
         return projects;
     }
 
     async getByIdUser(id_user: string): Promise<GetProjectDto[]> {
-        const projects = await this.projectRepositorie.getByIdUser(id_user);
+        const projects = await this.projectRepositorie.findByIdUser(id_user);
 
         return projects;
     }
 
     async getColaboratorsProject(id_project: string): Promise<GetColaboratorProjectDto[]> {
-        const colaborators = await this.projectRepositorie.getAllColaborators(id_project);
+        const colaborators = await this.projectRepositorie.findColaborators(id_project);
 
         return colaborators;
     }
@@ -51,6 +51,6 @@ export class ProjectService {
     }
 
     async inviteProjectToUser() {
-        await this.emailService.sendEmail();
+        
     }
 }

@@ -15,7 +15,7 @@ export class ColaboratorService {
     }
 
     async getAll(): Promise<GetColaboratorDto[]> {
-        const colaborators = await this.colaboratorRepositorie.getAll();
+        const colaborators = await this.colaboratorRepositorie.findAll();
         return colaborators;
     }
 }
