@@ -8,6 +8,7 @@ import { Request } from "express";
 import { AuthGuard } from "@nestjs/passport";
 import { GetColaboratorDto } from "../colaborator/dto/get-colaborator.dto";
 import { RolesGuard } from "../auth/roles.guard";
+import { InviteProjectControllerDto } from "./dto/invite-project-controller.dto";
 
 @Controller("project")
 export class ProjectController {
@@ -59,8 +60,14 @@ export class ProjectController {
         return colaborators;
     }
 
+    @ApiBearerAuth("authorization")
+    @UseGuards(AuthGuard("jwt"), RolesGuard)
     @Post(":id/colaborators/invite")
-    async inviteColaborator(@Param("id") id: string) {
-        await this.projectService.inviteProjectToUser();
+    async inviteProject(@Param("id") id_project: string, @Body() body: InviteProjectControllerDto, @Req() req: Request) {
+        await this.projectService.inviteProjectToUser({
+            emailToInvite: body.emailToInvite,
+            idProject: id_project,
+            usernameInviting: req.user.name
+        });
     }
 }

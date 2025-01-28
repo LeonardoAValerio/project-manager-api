@@ -17,7 +17,7 @@ export class ColaboratorRepositorie {
         return newColaborator;
     }
 
-    async getAll(): Promise<GetColaboratorDto[]> {
+    async findAll(): Promise<GetColaboratorDto[]> {
         const colaborators = await this.prisma.colaboratorProject.findMany();
         
         return colaborators;
