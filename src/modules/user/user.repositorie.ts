@@ -3,6 +3,7 @@ import { User } from "@prisma/client";
 import { PrismaService } from "src/shared/database/prisma.service";
 import { GetUserDto } from "./dto/get-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { use } from "passport";
 
 @Injectable()
 export class UserRepositorie {
@@ -19,7 +20,7 @@ export class UserRepositorie {
         return newUser;
     }
 
-    async getAll(): Promise<GetUserDto[]> {
+    async findAll(): Promise<GetUserDto[]> {
         const users = await this.prisma.user.findMany({
             omit: {
                 password: true
@@ -37,9 +38,9 @@ export class UserRepositorie {
         })
     }
 
-    async getFiltered(filters: Partial<User>): Promise<User[]> {
+    async findWithFilters(filters: Partial<User>): Promise<User[]> {
         const users = await this.prisma.user.findMany({
-            where: filters
+            where: filters,
         })
 
         return users;

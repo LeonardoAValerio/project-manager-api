@@ -67,7 +67,7 @@ export class ProjectController {
         await this.projectService.inviteProjectToUser({
             emailToInvite: body.emailToInvite,
             idProject: id_project,
-            usernameInviting: req.user.name
+            userInviting: req.user
         });
     }
 }

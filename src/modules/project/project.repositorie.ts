@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/shared/database/prisma.service";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { GetProjectDto } from "./dto/get-project.dto";
+import { GetColaboratorProjectDto } from "./dto/get-colaborators-project.dto";
 
 @Injectable()
 export class ProjectRepositorie {
@@ -23,7 +24,7 @@ export class ProjectRepositorie {
         return projects;
     }
 
-    async findByIdUser(id_user: string) {
+    async findByIdUser(id_user: string): Promise<GetProjectDto[]> {
         const projects = await this.prisma.project.findMany({
             where: {
                 Project: {
@@ -37,7 +38,7 @@ export class ProjectRepositorie {
         return projects;
     }
 
-    async findColaborators(id_project: string) {
+    async findColaborators(id_project: string): Promise<GetColaboratorProjectDto[]> {
         const colaboratorsBD = await this.prisma.project.findUnique({
             where: {
                 id: id_project
@@ -64,5 +65,15 @@ export class ProjectRepositorie {
             return mappedColaborator;
         });
         return colaborators;
+    }
+
+    async findById(id: string): Promise<GetProjectDto> {
+        const project = await this.prisma.project.findUnique({
+            where: {
+                id
+            }
+        });
+
+        return project;
     }
 }
