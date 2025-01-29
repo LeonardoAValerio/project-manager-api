@@ -22,4 +22,12 @@ export class ColaboratorRepositorie {
         
         return colaborators;
     }
+
+    async findFiltered(filters: Partial<GetColaboratorDto>): Promise<GetColaboratorDto[]> {
+        const colaborators = await this.prisma.colaboratorProject.findMany({
+            where: filters
+        });
+        
+        return colaborators;
+    }
 }

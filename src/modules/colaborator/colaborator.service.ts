@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { ColaboratorRepositorie } from "./colaborator.repositore";
 import { CreateColaboratorDto } from "./dto/create-colaborator.dto";
 import { GetColaboratorDto } from "./dto/get-colaborator.dto";
@@ -14,8 +14,14 @@ export class ColaboratorService {
         return newColaborator;
     }
 
-    async getAll(): Promise<GetColaboratorDto[]> {
+    async findAll(): Promise<GetColaboratorDto[]> {
         const colaborators = await this.colaboratorRepositorie.findAll();
+        return colaborators;
+    }
+
+    async findAllByProject(id_project: string) {
+        const colaborators = await this.colaboratorRepositorie.findFiltered({id_project});
+
         return colaborators;
     }
 }

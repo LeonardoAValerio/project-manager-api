@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
+import { Body, Controller, Get, Header, Headers, Post, UseGuards } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
 import { ValidationErrorResponse } from "src/shared/utils/responses/validation-error.response";
 import { ColaboratorService } from "./colaborator.service";
 import { GetColaboratorDto } from "./dto/get-colaborator.dto";
 import { CreateColaboratorDto } from "./dto/create-colaborator.dto";
+import { AuthGuard } from "@nestjs/passport";
+import { RolesGuard } from "../auth/roles.guard";
 
 @Controller("colaborator")
 export class ColaboratorController {
@@ -14,9 +16,11 @@ export class ColaboratorController {
     @ApiOkResponse({
         type: [GetColaboratorDto]
     })
+    @ApiBearerAuth("authorization")
+    @UseGuards(AuthGuard("jwt"), RolesGuard)
     @Get()
-    async getAll() {
-        const colaborators = await this.colaboratorService.getAll();
+    async getAll(@Headers("id_project") id_project: string) {
+        const colaborators = await this.colaboratorService.findAllByProject(id_project);
 
         return colaborators;
     }

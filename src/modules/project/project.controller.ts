@@ -45,29 +45,29 @@ export class ProjectController {
         return newProject;
     }
 
-    @ApiBearerAuth("authorization")
-    @ApiOkResponse({
-        type: [GetColaboratorDto]
-    })
-    @ApiForbiddenResponse({
-        description: "Doesn't have access to the project!"
-    })
-    @UseGuards(AuthGuard("jwt"), RolesGuard)
-    @Get(":id/colaborators")
-    async getColaboratorsProject(@Param("id") id: string) {
-        const colaborators = await this.projectService.getColaboratorsProject(id);
+    // @ApiBearerAuth("authorization")
+    // @ApiOkResponse({
+    //     type: [GetColaboratorDto]
+    // })
+    // @ApiForbiddenResponse({
+    //     description: "Doesn't have access to the project!"
+    // })
+    // @UseGuards(AuthGuard("jwt"), RolesGuard)
+    // @Get(":id/colaborators")
+    // async getColaboratorsProject(@Param("id") id: string) {
+    //     const colaborators = await this.projectService.getColaboratorsProject(id);
 
-        return colaborators;
-    }
+    //     return colaborators;
+    // }
 
-    @ApiBearerAuth("authorization")
-    @UseGuards(AuthGuard("jwt"), RolesGuard)
-    @Post(":id/colaborators/invite")
-    async inviteProject(@Param("id") id_project: string, @Body() body: InviteProjectControllerDto, @Req() req: Request) {
-        await this.projectService.inviteProjectToUser({
-            emailToInvite: body.emailToInvite,
-            idProject: id_project,
-            userInviting: req.user
-        });
-    }
+    // @ApiBearerAuth("authorization")
+    // @UseGuards(AuthGuard("jwt"), RolesGuard)
+    // @Post(":id/colaborators/invite")
+    // async inviteProject(@Param("id") id_project: string, @Body() body: InviteProjectControllerDto, @Req() req: Request) {
+    //     await this.projectService.inviteProjectToUser({
+    //         emailToInvite: body.emailToInvite,
+    //         idProject: id_project,
+    //         userInviting: req.user
+    //     });
+    // }
 }
