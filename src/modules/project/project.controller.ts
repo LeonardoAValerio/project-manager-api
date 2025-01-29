@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiOkResponse } from "@nestjs/swagger";
 import { ValidationErrorResponse } from "src/shared/utils/responses/validation-error.response";
 import { ProjectService } from "./project.service";
@@ -6,9 +6,8 @@ import { GetProjectDto } from "./dto/get-project.dto";
 import { CreateProjectDto } from "./dto/create-project.dto";
 import { Request } from "express";
 import { AuthGuard } from "@nestjs/passport";
-import { GetColaboratorDto } from "../colaborator/dto/get-colaborator.dto";
 import { RolesGuard } from "../auth/roles.guard";
-import { InviteProjectControllerDto } from "./dto/invite-project-controller.dto";
+import { Roles } from "../auth/roles.decorator";
 
 @Controller("project")
 export class ProjectController {
@@ -44,30 +43,12 @@ export class ProjectController {
         const newProject = await this.projectService.createWithMasterUser(body, id_user);
         return newProject;
     }
-
-    // @ApiBearerAuth("authorization")
-    // @ApiOkResponse({
-    //     type: [GetColaboratorDto]
-    // })
-    // @ApiForbiddenResponse({
-    //     description: "Doesn't have access to the project!"
-    // })
-    // @UseGuards(AuthGuard("jwt"), RolesGuard)
-    // @Get(":id/colaborators")
-    // async getColaboratorsProject(@Param("id") id: string) {
-    //     const colaborators = await this.projectService.getColaboratorsProject(id);
-
-    //     return colaborators;
-    // }
-
-    // @ApiBearerAuth("authorization")
-    // @UseGuards(AuthGuard("jwt"), RolesGuard)
-    // @Post(":id/colaborators/invite")
-    // async inviteProject(@Param("id") id_project: string, @Body() body: InviteProjectControllerDto, @Req() req: Request) {
-    //     await this.projectService.inviteProjectToUser({
-    //         emailToInvite: body.emailToInvite,
-    //         idProject: id_project,
-    //         userInviting: req.user
-    //     });
-    // }
+    
+    @ApiBearerAuth("authorization")
+    @UseGuards(AuthGuard("jwt"), RolesGuard)
+    @Roles(["ADMIN", "MASTER"])
+    @Post("invite")
+    async inviteProject(@Headers("id_project") id_project: string) {
+        return await this.projectService.createInvitationProject(id_project);
+    }
 }

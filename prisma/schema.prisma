@@ -59,11 +59,3 @@ model Work {
   total_value Float?
   ColaboratorProject ColaboratorProject @relation(fields: [id_colaborator], references: [id_colaborator])
 }
-
-model Invitation {
-  id String @id @default(uuid())
-  id_user_invite String
-  id_user_invited String
-  id_project String
-  expire_date DateTime
-}

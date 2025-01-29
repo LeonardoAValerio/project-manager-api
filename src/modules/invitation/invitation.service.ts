@@ -1,30 +1,20 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { InvitationRepositorie } from "./invitation.repositorie";
 import { JwtService } from "@nestjs/jwt";
 import { CreateInvitationDto } from "./dto/create-invitaton.dto";
 import { ColaboratorService } from "../colaborator/colaborator.service";
+import { GetUserDto } from "../user/dto/get-user.dto";
 
 @Injectable()
 export class InvitationService {
     constructor(
-        private invitationRepositorie: InvitationRepositorie,
         private jwtService: JwtService,
         private colaboratorService: ColaboratorService
     ) {}
 
     async create(props: CreateInvitationDto) {
-        const expire_date = new Date();
-        expire_date.setDate(expire_date.getSeconds() + 60);
-
-        const newInvitation = await this.invitationRepositorie.create({
-            expire_date: expire_date.toISOString(),
-            ...props
-        });
-
-        const token = this.jwtService.sign(newInvitation, { expiresIn: "60s" });
+        const token = this.jwtService.sign(props, { expiresIn: "1d" });
 
         return {
-            ...newInvitation,
             token: token
         }
     }
@@ -38,13 +28,17 @@ export class InvitationService {
         }
     }
 
-    async acceptInvitation(token: string) {
+    async acceptInvitation(token: string, user: GetUserDto) {
         const invitation = await this.validateToken(token);
 
-        await this.colaboratorService.create({
-            id_project: invitation.id_project,
-            id_user: invitation.id_user_invited,
-            role: "USER"
-        });
+        try {
+            await this.colaboratorService.create({
+                id_project: invitation.id_project,
+                id_user: user.id,
+                role: "USER"
+            });
+        } catch(error) {
+            throw new BadRequestException("User alredy exists!");
+        }
     }
 }

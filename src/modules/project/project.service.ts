@@ -5,7 +5,6 @@ import { ProjectRepositorie } from "./project.repositorie";
 import { ColaboratorService } from "../colaborator/colaborator.service";
 import { GetColaboratorProjectDto } from "./dto/get-colaborators-project.dto";
 import { EmailService } from "src/shared/utils/email/email.service";
-import { InviteProjectDto } from "./dto/invite-project.dto";
 import { UserService } from "../user/user.service";
 import { InvitationService } from "../invitation/invitation.service";
 
@@ -16,7 +15,6 @@ export class ProjectService {
         private colaboratorService: ColaboratorService,
         private userService: UserService,
         private invitationService: InvitationService,
-        private emailService: EmailService 
     ) {}
 
     async createWithMasterUser(attributes: CreateProjectDto, id_user: string): Promise<GetProjectDto> {
@@ -55,22 +53,14 @@ export class ProjectService {
         return colaborator;
     }
 
-    async inviteProjectToUser(props: InviteProjectDto) {
-        const user = await this.userService.findByEmail(props.emailToInvite);
-        if(!user) throw new BadRequestException("User email doesn't exist!");
-
-        const project = await this.projectRepositorie.findById(props.idProject);
+    async createInvitationProject(id_project: string) {
+        const project = await this.projectRepositorie.findById(id_project);
+        console.log(project);
         const token = await this.invitationService.create({
             id_project: project.id,
-            id_user_invite: props.userInviting.id,
-            id_user_invited: user.id
+            name: project.name
         })
 
-        await this.emailService.sendInvite(
-            props.emailToInvite,
-            project.name,
-            props.userInviting.name,
-            token.token
-        )
+        return token;
     }
 }
