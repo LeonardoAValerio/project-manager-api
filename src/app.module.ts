@@ -5,6 +5,7 @@ import { ColaboratorModule } from './modules/colaborator/colaborator.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { InvitationModule } from './modules/invitation/invitation.module';
+import { WorkModule } from './modules/work/work.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { InvitationModule } from './modules/invitation/invitation.module';
     ProjectModule,
     ColaboratorModule,
     InvitationModule,
+    WorkModule,
     AuthModule
   ],
   controllers: [],
