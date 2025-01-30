@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { InvitationService } from "./invitation.service";
-import { ApiCreatedResponse, ApiForbiddenResponse } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { Request } from "express";
 
@@ -14,6 +14,7 @@ export class InvitationController {
     @ApiForbiddenResponse({
         description: "Invalid token!"
     })
+    @ApiBearerAuth("authorization")
     @UseGuards(AuthGuard("jwt"))
     @Get("accept")
     async acceptInvite(@Query("token") token: string, @Req() req: Request) {
