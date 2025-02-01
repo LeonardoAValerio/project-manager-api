@@ -29,12 +29,6 @@ export class WorkService {
         const timeStarted = new Time(startedAt.getMinutes(), startedAt.getHours());
         const timeEnded = new Time(endedAt.getMinutes(), endedAt.getHours());
 
-        console.log(timeStarted);
-        console.log(timeEnded);
-
-        console.log(timeStarted.fullTime);
-        console.log(timeEnded.fullTime);
-
         return timeEnded.fullTime - timeStarted.fullTime;
     }
 
