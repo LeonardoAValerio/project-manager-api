@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, Headers, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Header, Headers, Param, Post, Put, Req, UseGuards } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse } from "@nestjs/swagger";
 import { ValidationErrorResponse } from "src/shared/utils/responses/validation-error.response";
 import { ColaboratorService } from "./colaborator.service";
@@ -6,6 +6,9 @@ import { GetColaboratorDto } from "./dto/get-colaborator.dto";
 import { CreateColaboratorDto } from "./dto/create-colaborator.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "../auth/roles.guard";
+import { Roles } from "../auth/roles.decorator";
+import { PutColaboratorDto } from "./dto/put-colaborator.dto";
+import { Request } from "express";
 
 @Controller("colaborator")
 export class ColaboratorController {
@@ -25,18 +28,21 @@ export class ColaboratorController {
         return colaborators;
     }
 
-    @ApiCreatedResponse({
-        description: 'The record has been successfully created.',
-        type: GetColaboratorDto,
-    })
-    @ApiBadRequestResponse({
-        description: 'Validation error',
-        type: ValidationErrorResponse
-    })
-    @Post()
-    async post(@Body() body: CreateColaboratorDto) {
-        const newColaborator = await this.colaboratorService.create(body);
+    @ApiBearerAuth("authorization")
+    @UseGuards(AuthGuard("jwt"), RolesGuard)
+    @Roles(["MASTER", "ADMIN"])
+    @Delete(":id")
+    async delete(@Param("id") id: string, @Headers("id_project") id_project: string) {
+        const result = await this.colaboratorService.deleteById(id);
+        return result;
+    }
 
-        return newColaborator;
+    @ApiBearerAuth("authorization")
+    @UseGuards(AuthGuard("jwt"), RolesGuard)
+    @Roles(["MASTER", "ADMIN"])
+    @Put(":id")
+    async put(@Param("id") id: string, @Headers("id_project") id_project: string, @Body() body: PutColaboratorDto, @Req() req: Request) {
+        const colaborator = await this.colaboratorService.putById(id, body, {id_project, ...req.user});
+        return colaborator;
     }
 }
